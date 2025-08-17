@@ -41,3 +41,27 @@ class PlanAssignmentSerializer(serializers.ModelSerializer):
         model = Plan_assignment
         fields = ['id', 'training_plan', 'client', 'assigned_at']
         read_only_fields = ['id', 'assigned_at']
+
+class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, min_length=8)
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'password', 'is_coach', 'is_client']
+
+    def validate(self, data):
+        if data.get('is_coach') and data.get('is_client'):
+            raise serializers.ValidationError("A user cannot be both a coach and a client.")
+        if not data.get('is_coach') and not data.get('is_client'):
+            raise serializers.ValidationError("User must be either a coach or a client.")
+        return data
+
+    def create(self, validated_data):
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            email=validated_data.get('email'),
+            password=validated_data['password'],
+            is_coach=validated_data['is_coach'],
+            is_client=validated_data['is_client']
+        )
+        return user
