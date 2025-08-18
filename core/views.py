@@ -2,13 +2,19 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from .serializers import *
 from rest_framework import generics
+from .models import *
+from rest_framework.permissions import IsAuthenticated
 # Create your views here.
 class TrainingSessionViewSet(viewsets.ModelViewSet):
     queryset = Training_session.objects.all()
     serializer_class = TrainingSessionSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         user= self.request.user
+        if not user.is_authenticated:
+            return Training_session.objects.none()
+
         if user.is_coach:
             return Training_session.objects.filter(coach=user)
         elif user.is_client:

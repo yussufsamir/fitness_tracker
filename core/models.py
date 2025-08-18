@@ -67,6 +67,18 @@ class Training_session(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    ACTIVITY_CHOICES = [
+        ('Running', 'Running'),
+        ('Cycling', 'Cycling'),
+        ('Weightlifting', 'Weightlifting'),
+        ('Swimming', 'Swimming'),
+        ('Walking', 'Walking'),
+        ('Yoga', 'Yoga'),
+    ]
+    activity_type = models.CharField(max_length=50, choices=ACTIVITY_CHOICES,default='Running')
+    distance_km = models.FloatField(blank=True, null=True)
+    calories_burned = models.PositiveIntegerField(blank=True, null=True)
+
     class Meta:
         ordering = ["-date", "-id"]
         indexes = [models.Index(fields=["coach", "date"])]

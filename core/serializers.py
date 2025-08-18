@@ -9,8 +9,8 @@ class UserSerializer(serializers.ModelSerializer):
 class TrainingSessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Training_session
-        fields = ['id', 'coach', 'date', 'duration', 'title', 'description', 'assigned_clients']
-        read_only_fields = ['id', 'created_at', 'updated_at']
+        fields = ['id', 'coach', 'date', 'duration', 'title', 'description', 'assigned_clients','activity_type','distance_km','calories_burned']
+        read_only_fields = ['id', 'created_at', 'updated_at','coach']
 
 class CommentSectionSerializer(serializers.ModelSerializer):
     class Meta:
