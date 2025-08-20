@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets, filters
+
+from .permissions import IsCommentOwnerOrCoach , IsCoach
 from .serializers import *
 from rest_framework import generics
 from .models import *
@@ -9,6 +11,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import RetrieveUpdateAPIView
+
+
 
 # Create your views here.
 class UserProfileView(RetrieveUpdateAPIView):
@@ -35,23 +39,42 @@ class TrainingSessionViewSet(viewsets.ModelViewSet):
         return Training_session.objects.none()
 
     def perform_create(self, serializer):
+        user = self.request.user
+        if not user.is_coach:
+            raise PermissionDenied("Only coaches can create training sessions.")
         serializer.save(coach=self.request.user)
-
 class CommentSectionViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated, IsCommentOwnerOrCoach]
     queryset = CommentSection.objects.all()
     serializer_class = CommentSectionSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_authenticated:
+            if user.is_coach:
+                
+                return CommentSection.objects.filter(training_session__coach=user)
+            elif user.is_client:
+                
+                return CommentSection.objects.filter(client=user)
+        return CommentSection.objects.none()
+    
+    def perform_create(self, serializer):
+        serializer.save(client=self.request.user)
 
 class TrainingPlanViewSet(viewsets.ModelViewSet):
     queryset = Training_plan.objects.all()
     serializer_class = TrainingPlanSerializer
+    permission_classes = [IsAuthenticated, IsCoach]
 
 class ExerciseViewSet(viewsets.ModelViewSet):
     queryset = Exercise.objects.all()
     serializer_class = ExerciseSerializer
-
+    permission_classes = [IsAuthenticated, IsCoach]
 class PlanAssignmentViewSet(viewsets.ModelViewSet):
     queryset = Plan_assignment.objects.all()
     serializer_class = PlanAssignmentSerializer
+    permission_classes = [IsAuthenticated, IsCoach]
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()

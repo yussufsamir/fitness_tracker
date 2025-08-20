@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 # Create your models here.
 
 class User(AbstractUser):
+    email = models.EmailField(unique=True)
     is_coach= models.BooleanField(default=False)
     is_client = models.BooleanField(default=False)
 

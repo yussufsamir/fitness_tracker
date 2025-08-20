@@ -17,7 +17,7 @@ class CommentSectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommentSection
         fields = ['id', 'training_session', 'client', 'comment', 'created_at']
-        read_only_fields = ['id', 'created_at']
+        read_only_fields = ['id', 'created_at','client']
 
 class TrainingPlanSerializer(serializers.ModelSerializer):
     class Meta:
