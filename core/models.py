@@ -146,6 +146,24 @@ class Session_exercise(models.Model):
         if self.reps: core.append(f"{self.reps}")
         main = " ".join(core) or "prescription"
         return f"{self.exercise.name} – {main}"
+    
+class Activity(models.Model):
+    ACTIVITY_CHOICES = [
+        ('Running', 'Running'),
+        ('Cycling', 'Cycling'),
+        ('Weightlifting', 'Weightlifting'),
+        ('Swimming', 'Swimming'),
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='activities')
+    activity_type = models.CharField(max_length=50, choices=ACTIVITY_CHOICES)
+    duration = models.PositiveIntegerField(help_text="Duration in minutes")
+    distance = models.FloatField(null=True, blank=True)
+    calories_burned = models.PositiveIntegerField()
+    date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.activity_type} on {self.date}"
 
 
 

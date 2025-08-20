@@ -1,10 +1,11 @@
 from rest_framework import serializers
-from .models import Training_session, CommentSection, Exercise, Session_exercise,User,Training_plan,Plan_assignment
+from .models import Activity, Training_session, CommentSection, Exercise, Session_exercise,User,Training_plan,Plan_assignment
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'is_coach', 'is_client']
+        read_only_fields = ['id', 'username', 'is_coach', 'is_client']
 
 class TrainingSessionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -65,3 +66,9 @@ class RegisterSerializer(serializers.ModelSerializer):
             is_client=validated_data['is_client']
         )
         return user
+
+class ActivitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Activity
+        fields = ['id', 'user', 'activity_type', 'duration', 'distance', 'calories_burned', 'date']
+        read_only_fields = ['id', 'user', 'date']
