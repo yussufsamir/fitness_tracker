@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-wltl40t8wefh#ff+u+atvv5m$w1os$)kjb8q0p9^u^$6i6j-q+
 DEBUG = False
 
 
-ALLOWED_HOSTS = ['yourdomain.com', 'yourapp.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['fitness-tracker-api-app-dc05722a0570.herokuapp.com', '127.0.0.1', 'localhost']
+
 
 # Security settings
 SECURE_BROWSER_XSS_FILTER = True
